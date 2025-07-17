@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { eCellType } from '../../../../utils/enums/cell.enum';
+import { eInputType } from '../../../../utils/enums/input.enum';
 
 @Component({
 	selector: 'app-product-administration-page',
@@ -15,10 +16,10 @@ import { eCellType } from '../../../../utils/enums/cell.enum';
 export class ProductAdministrationPageComponent implements OnInit {
 	columnDefinition: IColumnDefinition[] = [
 		{ name: 'Logo', key: 'logo', type: eCellType.IMAGE },
-		{ name: 'Nombre del producto', key: 'name', type: eCellType.STRING },
-		{ name: 'Descripción', key: 'description', type: eCellType.STRING },
-		{ name: 'Fecha de liberación', key: 'date_release', type: eCellType.DATE },
-		{ name: 'Fecha de reestructuración', key: 'date_revision', type: eCellType.DATE },
+		{ name: 'Nombre del producto', key: 'name', type: eCellType.STRING},
+		{ name: 'Descripción', key: 'description', type: eCellType.STRING, tooltip: 'Descripción del producto' },
+		{ name: 'Fecha de liberación', key: 'date_release', type: eCellType.DATE, tooltip: 'Fecha de liberación del producto' },
+		{ name: 'Fecha de reestructuración', key: 'date_revision', type: eCellType.DATE, tooltip: 'Fecha de reestructuración del producto' },
 	];
 
 	products: Product[] = [];
@@ -26,6 +27,7 @@ export class ProductAdministrationPageComponent implements OnInit {
 	productForm!: FormGroup;
 	productsFiltered: Product[] = [];
 	error: string = '';
+	typeInput = eInputType;
 
 	constructor(
 		private _productService: ProductsService,

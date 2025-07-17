@@ -1,23 +1,27 @@
 <div class="product-administration-page">
-	<h2>Administración de Productos</h2>
-	
-	
+
 	@if (error) {
-		<div class="error">
-			<p>{{ error }}</p>
-		</div>
+	<div class="error">
+		<p>{{ error }}</p>
+	</div>
 	}
-	
+
 	@if (productForm) {
-		<form [formGroup]="productForm" class="search-form">
-			<input type="text" placeholder="Buscar productos..." [formControl]="$any(productForm.get('search'))" />
-			<button type="button" (click)="addProduct()" class="add-button">Agregar Producto</button>
-		</form>
+	<form [formGroup]="productForm" class="search-form">
+		<app-input [name]="'search'"
+			[type]="typeInput.TEXT"
+			[formControl]="$any(productForm.get('search'))"
+			placeholder="Ingrese el ID" />
+		<button type="button" (click)="addProduct()" class="btn btn-primary">Agregar
+			Producto</button>
+	</form>
+
 	}
-	
+
 	@if (!error) {
-		<div class="table-container">
-			<app-shared-table [columnDefinition]="columnDefinition" [data]="productsFiltered"></app-shared-table>
-		</div>
+	<div class="table-container">
+		<app-shared-table [columnDefinition]="columnDefinition"
+			[data]="productsFiltered"></app-shared-table>
+	</div>
 	}
 </div>

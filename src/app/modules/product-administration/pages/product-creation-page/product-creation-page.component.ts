@@ -11,8 +11,7 @@ import { eAlertType } from '../../../../utils/enums/alert.enum';
 @Component({
   selector: 'app-product-creation-page',
   standalone: false,
-  templateUrl: './product-creation-page.component.html',
-  styleUrl: './product-creation-page.component.scss'
+  templateUrl: './product-creation-page.component.html'
 })
 export class ProductCreationPageComponent implements OnInit {
   productForm: FormGroup = new FormGroup({
