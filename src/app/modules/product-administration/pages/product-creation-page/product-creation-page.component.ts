@@ -40,6 +40,7 @@ export class ProductCreationPageComponent implements OnInit {
     if (state) {
       this.productForm.patchValue(state);
       this.editMode = true;
+      this.productForm.get('id')?.disable();
     }
     this.productForm.valueChanges.subscribe((value) => {
     });
@@ -53,7 +54,12 @@ export class ProductCreationPageComponent implements OnInit {
 
   async sendForm() {
     try {
-      const response = await firstValueFrom(this._productService.createProduct(this.productForm.value));
+      let response: any;
+      if (this.editMode) {
+        response = await firstValueFrom(this._productService.updateProduct(this.productForm.value));
+      } else {
+        response = await firstValueFrom(this._productService.createProduct(this.productForm.value));
+      }
       
       if (response && response.data) {
         this.error = '';
