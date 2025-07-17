@@ -12,7 +12,8 @@ export class AplicationService {
     });
 
     constructor() {
-        this.apiBaseUrl = environment.apiUrl;
+        // Usar la ruta del proxy en lugar de la URL completa
+        this.apiBaseUrl = '/api';
     }
 
     getHeaders() {

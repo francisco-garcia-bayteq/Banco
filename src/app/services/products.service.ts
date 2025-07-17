@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Product } from "../utils/models/product.interface";
-import { environment } from "../environment/environment";
 import { AplicationService } from "../utils/base/aplication.service";
 import { HttpClient } from "@angular/common/http";
 import { ApiResponse } from "../utils/models/api.interface";
@@ -11,7 +10,7 @@ import { Observable } from "rxjs";
 })
 export class ProductsService extends AplicationService {
 
-	constructor(private readonly _http: HttpClient) {
+	constructor(private _http: HttpClient) {
 		super();
 	}
 

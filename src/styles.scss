@@ -1,0 +1,54 @@
+$color-primary: #007bff;
+$color-secondary: #6c757d;
+$color-background-primary: #e2e3e5;
+$color-background-secondary: #f8f9fa;
+
+$color-danger: #dc3545;
+$color-success: #28a745;
+
+// TIPO DE LETRA VERDANA
+body {
+    font-family: 'Verdana', sans-serif;
+}
+
+.alert-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.alert {
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: $color-background-primary;
+    border-color: $color-primary;
+    color: $color-primary;
+}
+
+.alert-danger {
+    background-color: $color-background-secondary;
+    border-color: $color-danger;
+    color: $color-danger;
+}
+
+.error-message {
+    color: $color-danger;
+}
+
+// TABLA
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+th, td {
+    padding: 0.5rem;
+    text-align: left;
+}
+

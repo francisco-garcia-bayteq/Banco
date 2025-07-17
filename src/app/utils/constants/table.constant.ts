@@ -1,0 +1,1 @@
+export const TABLE_SIZE_PAGE_OPTIONS = [5, 10, 20];

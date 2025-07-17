@@ -1,0 +1,31 @@
+<h2>Formulario de Registro</h2>
+<hr>
+<form [formGroup]="productForm">
+    <app-input [label]="'ID'" [name]="'id'" [type]="typeInput.TEXT"
+        [formControl]="$any(productForm.get('id'))" placeholder="Ingrese el ID"
+        [class]="'form-control'" />
+    <app-input [label]="'Nombre'" [name]="'name'" [type]="typeInput.TEXT"
+        [formControl]="$any(productForm.get('name'))"
+        [placeholder]="'Ingrese el nombre'" [class]="'form-control'" />
+    <app-input [label]="'Descripción'" [name]="'description'"
+        [type]="typeInput.TEXT"
+        [formControl]="$any(productForm.get('description'))"
+        [placeholder]="'Ingrese la descripción'" [class]="'form-control'" />
+    <app-input [label]="'Logo'" [name]="'logo'"
+        [type]="typeInput.TEXT"
+        [formControl]="$any(productForm.get('logo'))"
+        [placeholder]="'Ingrese el logo'"
+        [class]="'form-control'" />
+    <app-input [label]="'Fecha de liberación'" [name]="'date_release'"
+        [type]="typeInput.DATE"
+        [formControl]="$any(productForm.get('date_release'))"
+        [placeholder]="'Ingrese la fecha de liberación'"
+        [class]="'form-control'" />
+    <app-input [label]="'Fecha de reestructuración'" [name]="'date_revision'"
+        [type]="typeInput.DATE"
+        [formControl]="$any(productForm.get('date_revision'))"
+        [placeholder]="'Ingrese la fecha de reestructuración'"
+        [class]="'form-control'" />
+    <button type="button" (click)="resetForm()">Reiniciar</button>
+    <button type="button" (click)="sendForm()">Enviar</button>
+</form>
