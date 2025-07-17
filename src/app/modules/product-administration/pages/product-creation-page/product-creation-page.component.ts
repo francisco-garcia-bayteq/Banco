@@ -43,6 +43,8 @@ export class ProductCreationPageComponent implements OnInit {
 
   resetForm() {
     this.productForm.reset();
+    this.productForm.updateValueAndValidity();
+    this.productForm.markAsPristine();
   }
 
   async sendForm() {

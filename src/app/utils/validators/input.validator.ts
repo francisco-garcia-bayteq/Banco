@@ -2,6 +2,9 @@ import { AbstractControl, ValidationErrors, Validators } from "@angular/forms";
 
 export function isDateNYearsAfterCurrent(years: number) {
     return (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value) {
+            return null;
+        }
         const date = new Date(control.value.split('-')[0], control.value.split('-')[1] - 1, control.value.split('-')[2]);
         const currentDate = new Date();
         if ((date.getDate() === currentDate.getDate()) &&
@@ -15,6 +18,9 @@ export function isDateNYearsAfterCurrent(years: number) {
 
 export function isDateGreaterThanCurrent() {
     return (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value) {
+            return null;
+        }
         const date = new Date(control.value.split('-')[0], control.value.split('-')[1] - 1, control.value.split('-')[2]);
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);

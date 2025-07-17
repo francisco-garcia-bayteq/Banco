@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LayoutsModule } from './layouts/top-bar/layouts.module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, LayoutsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

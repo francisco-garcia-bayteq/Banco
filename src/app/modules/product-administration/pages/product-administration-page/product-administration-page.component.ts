@@ -11,7 +11,6 @@ import { eCellType } from '../../../../utils/enums/cell.enum';
 	selector: 'app-product-administration-page',
 	standalone: false,
 	templateUrl: './product-administration-page.component.html',
-	styleUrl: './product-administration-page.component.scss'
 })
 export class ProductAdministrationPageComponent implements OnInit {
 	columnDefinition: IColumnDefinition[] = [

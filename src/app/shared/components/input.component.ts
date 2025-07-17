@@ -6,9 +6,15 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
     selector: 'app-input',
     standalone: false,
     template: `
-		<div class="form-group" [class]="class">
-			<label for="{{ name }}">{{ label }}</label>
-			<input type="{{ type }}" id="{{ name }}" [formControl]="formControl" [placeholder]="placeholder" />
+		<div class="form-group">
+			<label for="{{ name }}" class="form-label">{{ label }}</label>
+			<input 
+				type="{{ type }}" 
+				id="{{ name }}" 
+				[formControl]="formControl" 
+				[placeholder]="placeholder"
+				class="form-input"
+				[class.error]="validarCampo()" />
 			<small *ngIf="validarCampo()" class="error-message">
 				{{ messageError() }}
 			</small>
@@ -30,6 +36,8 @@ export class InputComponent implements ControlValueAccessor {
     @Input() formControl: FormControl = new FormControl('');
     @Input() placeholder: string = '';
     @Input() class: string = '';
+    @Input() customErrorMessage: string = '';
+    
     public value: any;
     public locale: any;
 
@@ -60,21 +68,24 @@ export class InputComponent implements ControlValueAccessor {
         for (const key of Object.keys(errores)) {
             switch (key) {
                 case 'required':
-                    msj = 'Este campo es requerido';
+                    msj = 'Este campo es requerido!';
                     break;
                 case 'minlength':
-                    msj = 'Este campo debe tener al menos ' + errores[key].requiredLength + ' caracteres';
+                    msj = 'Este campo debe tener al menos ' + errores[key].requiredLength + ' caracteres!';
                     break;
                 case 'maxlength':
-                    msj = 'Este campo debe tener menos de ' + errores[key].requiredLength + ' caracteres';
+                    msj = 'Este campo debe tener menos de ' + errores[key].requiredLength + ' caracteres!';
                     break;
                 case 'isDateGreaterThanCurrent':
-                    msj = 'La fecha debe ser mayor a la fecha actual';
+                    msj = 'La fecha debe ser mayor a la fecha actual!';
                     break;
                 case 'isDateNYearsAfterCurrent':
-                    msj = 'La fecha debe ser al menos 1 año después de la fecha actual';
+                    msj = 'La fecha debe ser al menos 1 año después de la fecha actual!';
                     break;
             }
+        }
+        if (this.customErrorMessage) {
+            msj = this.customErrorMessage;
         }
         return msj;
     }
