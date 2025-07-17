@@ -20,6 +20,9 @@ export class ProductAdministrationPageComponent implements OnInit {
 		{ name: 'Descripción', key: 'description', type: eCellType.STRING, tooltip: 'Descripción del producto' },
 		{ name: 'Fecha de liberación', key: 'date_release', type: eCellType.DATE, tooltip: 'Fecha de liberación del producto' },
 		{ name: 'Fecha de reestructuración', key: 'date_revision', type: eCellType.DATE, tooltip: 'Fecha de reestructuración del producto' },
+		{ name: '', key: 'actions', type: eCellType.ACTIONS_NAVIGATE, options: [
+			{ label: 'Editar', value: 'edit', navigate: '/create', data: { id: 'id' } }
+		]}
 	];
 
 	products: Product[] = [];
@@ -49,7 +52,6 @@ export class ProductAdministrationPageComponent implements OnInit {
 		if (response && response.data) {
 			this.products = response.data;
 			this.productsFiltered = [...this.products]; // Inicializar con todos los productos
-			console.log('Productos cargados:', this.products);
 		} else {
 			console.error('Respuesta inválida del servicio:', response);
 			this.error = 'No se pudieron cargar los productos';

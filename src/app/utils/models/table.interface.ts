@@ -3,4 +3,10 @@ export interface IColumnDefinition {
     key: string;
     type: string;
     tooltip?: string;
+    options?: {
+        label: string;
+        value: string;
+        navigate?: string;
+        data?: any;
+    }[];
 }

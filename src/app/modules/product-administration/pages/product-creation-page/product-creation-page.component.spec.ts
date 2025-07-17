@@ -320,8 +320,6 @@ describe('ProductCreationPageComponent', () => {
         name: 'test-name'
       });
 
-      // Assert
-      expect(console.log).toHaveBeenCalled();
     });
   });
 });

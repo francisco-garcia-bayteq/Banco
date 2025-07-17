@@ -24,6 +24,7 @@ export class ProductCreationPageComponent implements OnInit {
   });
 
   error: string = '';
+  editMode: boolean = false;
 
   typeInput = eInputType;
 
@@ -35,8 +36,12 @@ export class ProductCreationPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const state = history.state;
+    if (state) {
+      this.productForm.patchValue(state);
+      this.editMode = true;
+    }
     this.productForm.valueChanges.subscribe((value) => {
-      console.log(value);
     });
   }
 
@@ -47,13 +52,24 @@ export class ProductCreationPageComponent implements OnInit {
   }
 
   async sendForm() {
-    const response = await firstValueFrom(this._productService.createProduct(this.productForm.value))
-    if (response && response.data) {
-			this.error = '';
-      this._alertService.showAlert('Producto creado correctamente', eAlertType.SUCCESS);
-      this._router.navigate(['/product-administration']);
-		} else {
+    try {
+      const response = await firstValueFrom(this._productService.createProduct(this.productForm.value));
+      
+      if (response && response.data) {
+        this.error = '';
+        this._alertService.showConfirmAlert(
+          'Producto creado correctamente', 
+          eAlertType.SUCCESS,
+          () => {
+            this._router.navigate(['/product-administration']);
+          }
+        );
+      } else {
+        this._alertService.showAlert('Error al crear el producto', eAlertType.DANGER);
+      }
+    } catch (error) {
+      console.error('Error creating product:', error);
       this._alertService.showAlert('Error al crear el producto', eAlertType.DANGER);
-		}
+    }
   }
 }

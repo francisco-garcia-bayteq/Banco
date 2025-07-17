@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { IColumnDefinition } from "../../utils/models/table.interface";
 import { TABLE_SIZE_PAGE_OPTIONS } from "../../utils/constants/table.constant";
 import { eCellType } from "../../utils/enums/cell.enum";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-shared-table',
@@ -36,6 +37,16 @@ import { eCellType } from "../../utils/enums/cell.enum";
                                 }
                                 @case (eCellType.DATE) {
                                     {{ row[column.key] | date:'dd/MM/yyyy' }}
+                                }
+                                @case (eCellType.ACTIONS_NAVIGATE) {
+                                    <div class="dropdown">
+                                        <button type="button" class="btn-options" title="Acciones">⋮</button>
+                                        <div class="dropdown-content">
+                                            @for (option of column.options; track option) {
+                                                <a href="javascript:void(0)" (click)="navigateTo(option.navigate || '', row)">{{ option.label }}</a>
+                                            }
+                                        </div>
+                                    </div>
                                 }
                             }
                         </td>
@@ -73,6 +84,8 @@ export class TableComponent {
     tooltipY = 0;
     tooltipText = '';
 
+    constructor(private router: Router) {}
+
     onChangeTableSize(event: Event) {
         const target = event.target as HTMLSelectElement;
         const value = parseInt(target.value);
@@ -92,5 +105,9 @@ export class TableComponent {
 
     hideTooltip() {
         this.showTooltipFlag = false;
+    }
+
+    navigateTo(route: string, rowData: any) {
+        this.router.navigate([this.router.url + route], { state: rowData });
     }
 }

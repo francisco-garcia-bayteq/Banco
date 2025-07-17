@@ -1,5 +1,6 @@
 export enum eCellType {
     IMAGE = 'image',
     STRING = 'string',
-    DATE = 'date'
+    DATE = 'date',
+    ACTIONS_NAVIGATE = 'actions_navigate'
 }
