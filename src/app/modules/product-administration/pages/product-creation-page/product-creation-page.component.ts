@@ -37,7 +37,7 @@ export class ProductCreationPageComponent implements OnInit {
 
   ngOnInit(): void {
     const state = history.state;
-    if (state) {
+    if (state.id) {
       this.productForm.patchValue(state);
       this.editMode = true;
       this.productForm.get('id')?.disable();
