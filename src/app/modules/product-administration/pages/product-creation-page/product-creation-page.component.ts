@@ -42,8 +42,6 @@ export class ProductCreationPageComponent implements OnInit {
       this.editMode = true;
       this.productForm.get('id')?.disable();
     }
-    this.productForm.valueChanges.subscribe((value) => {
-    });
   }
 
   resetForm() {
@@ -54,17 +52,18 @@ export class ProductCreationPageComponent implements OnInit {
 
   async sendForm() {
     try {
+      this.productForm.get('id')?.enable();
       let response: any;
       if (this.editMode) {
         response = await firstValueFrom(this._productService.updateProduct(this.productForm.value));
       } else {
         response = await firstValueFrom(this._productService.createProduct(this.productForm.value));
       }
-      
+
       if (response && response.data) {
         this.error = '';
         this._alertService.showConfirmAlert(
-          'Producto creado correctamente', 
+          'Producto creado correctamente',
           eAlertType.SUCCESS,
           () => {
             this._router.navigate(['/product-administration']);
@@ -76,6 +75,10 @@ export class ProductCreationPageComponent implements OnInit {
     } catch (error) {
       console.error('Error creating product:', error);
       this._alertService.showAlert('Error al crear el producto', eAlertType.DANGER);
+    } finally {
+      if (this.editMode) {
+        this.productForm.get('id')?.disable();
+      }
     }
   }
 }
