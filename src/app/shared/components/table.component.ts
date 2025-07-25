@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IColumnDefinition } from "../../utils/models/table.interface";
 import { TABLE_SIZE_PAGE_OPTIONS } from "../../utils/constants/table.constant";
 import { eCellType } from "../../utils/enums/cell.enum";
@@ -43,7 +43,14 @@ import { Router } from "@angular/router";
                                         <button type="button" class="btn-options" title="Acciones">⋮</button>
                                         <div class="dropdown-content">
                                             @for (option of column.options; track option) {
-                                                <a href="javascript:void(0)" (click)="navigateTo(option.navigate || '', row)">{{ option.label }}</a>
+                                                @switch(option.value) {
+                                                    @case('edit') {
+                                                        <a href="javascript:void(0)" (click)="navigateTo(option.navigate || '', row)">{{ option.label }}</a>
+                                                    }
+                                                    @case('delete') {
+                                                        <a href="javascript:void(0)" (click)="deleteRow(row)">{{ option.label }}</a>
+                                                    }
+                                                }
                                             }
                                         </div>
                                     </div>
@@ -72,6 +79,7 @@ import { Router } from "@angular/router";
 export class TableComponent {
     @Input() columnDefinition!: IColumnDefinition[];
     @Input() data: any[] = [];
+    @Output() deleteRowEvent = new EventEmitter<any>();
 
     eCellType = eCellType;
 
@@ -109,5 +117,9 @@ export class TableComponent {
 
     navigateTo(route: string, rowData: any) {
         this.router.navigate([this.router.url + route], { state: rowData });
+    }
+
+    deleteRow(rowData: any) {
+        this.deleteRowEvent.emit(rowData);
     }
 }

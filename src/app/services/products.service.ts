@@ -25,5 +25,9 @@ export class ProductsService extends AplicationService {
     updateProduct(product: Product): Observable<ApiResponse<Product>> {
         return this._http.put<ApiResponse<Product>>(`${this.getApiBaseUrl()}/bp/products/${product.id}`, product, { headers: this.getHeaders() });
     }
+
+	deleteProduct(id: string): Observable<ApiResponse<Product>> {
+		return this._http.delete<ApiResponse<Product>>(`${this.getApiBaseUrl()}/bp/products/${id}`, { headers: this.getHeaders() });
+	}
     
 }

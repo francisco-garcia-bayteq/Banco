@@ -1,13 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { eAlertType } from "../utils/enums/alert.enum";
-
-export interface AlertData {
-  message: string;
-  type: eAlertType;
-  showConfirmButton?: boolean;
-  onConfirm?: () => void;
-}
+import { AlertData } from "../utils/models/alert.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +19,18 @@ export class AlertService {
             message, 
             type, 
             showConfirmButton: true,
-            onConfirm 
+            onConfirm
+        });
+    }
+
+    showConfirmAlertWithCancel(message: string, type: eAlertType = eAlertType.SUCCESS, onConfirm?: () => void, onCancel?: () => void) {
+        this._alertSubject.next({ 
+            message, 
+            type, 
+            showConfirmButton: true,
+            showCancelButton: true,
+            onConfirm,
+            onCancel
         });
     }
 

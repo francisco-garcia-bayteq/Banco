@@ -7,6 +7,8 @@ import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../services/alert.service';
 import { eAlertType } from '../../../../utils/enums/alert.enum';
+import { ApiResponse } from '../../../../utils/models/api.interface';
+import { Product } from '../../../../utils/models/product.interface';
 
 @Component({
   selector: 'app-product-creation-page',
@@ -51,9 +53,9 @@ export class ProductCreationPageComponent implements OnInit {
   }
 
   async sendForm() {
+    let response: ApiResponse<Product>;
     try {
       this.productForm.get('id')?.enable();
-      let response: any;
       if (this.editMode) {
         response = await firstValueFrom(this._productService.updateProduct(this.productForm.value));
       } else {
@@ -70,11 +72,11 @@ export class ProductCreationPageComponent implements OnInit {
           }
         );
       } else {
-        this._alertService.showAlert('Error al crear el producto', eAlertType.DANGER);
+        this._alertService.showAlert('Error al crear el producto' + response.message, eAlertType.DANGER);
       }
     } catch (error) {
       console.error('Error creating product:', error);
-      this._alertService.showAlert('Error al crear el producto', eAlertType.DANGER);
+      this._alertService.showAlert('Error al crear el producto' + error, eAlertType.DANGER);
     } finally {
       if (this.editMode) {
         this.productForm.get('id')?.disable();

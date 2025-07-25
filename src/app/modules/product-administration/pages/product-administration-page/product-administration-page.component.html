@@ -21,7 +21,8 @@
 	@if (!error) {
 	<div class="table-container">
 		<app-shared-table [columnDefinition]="columnDefinition"
-			[data]="productsFiltered"></app-shared-table>
+			[data]="productsFiltered"
+			(deleteRowEvent)="deleteProduct($event)"></app-shared-table>
 	</div>
 	}
 </div>

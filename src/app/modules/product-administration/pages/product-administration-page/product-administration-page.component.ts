@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { eCellType } from '../../../../utils/enums/cell.enum';
 import { eInputType } from '../../../../utils/enums/input.enum';
+import { eAlertType } from '../../../../utils/enums/alert.enum';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
 	selector: 'app-product-administration-page',
@@ -21,7 +23,8 @@ export class ProductAdministrationPageComponent implements OnInit {
 		{ name: 'Fecha de liberación', key: 'date_release', type: eCellType.DATE, tooltip: 'Fecha de liberación del producto' },
 		{ name: 'Fecha de reestructuración', key: 'date_revision', type: eCellType.DATE, tooltip: 'Fecha de reestructuración del producto' },
 		{ name: '', key: 'actions', type: eCellType.ACTIONS_NAVIGATE, options: [
-			{ label: 'Editar', value: 'edit', navigate: '/create', data: { id: 'id' } }
+			{ label: 'Editar', value: 'edit', navigate: '/create', data: { id: 'id' } },
+			{ label: 'Eliminar', value: 'delete', navigate: '/create', data: { id: 'id' } }
 		]}
 	];
 
@@ -35,7 +38,8 @@ export class ProductAdministrationPageComponent implements OnInit {
 	constructor(
 		private _productService: ProductsService,
 		private _router: Router,
-		private _formBuilder: FormBuilder
+		private _formBuilder: FormBuilder,
+		private _alertService: AlertService
 	) {
 	}
 
@@ -81,5 +85,26 @@ export class ProductAdministrationPageComponent implements OnInit {
 
 	addProduct() {
 		this._router.navigate(['/product-administration/create']);
+	}
+
+	deleteProduct(product: any) {
+		this._alertService.showConfirmAlertWithCancel(
+			'¿Estás seguro de querer eliminar este producto?',
+			eAlertType.DANGER,
+			() => {
+				this.deleteProductService(product);
+			},
+			() => {
+				console.log('Cancelado');
+			}
+		);
+	}
+
+	async deleteProductService(product: any) {
+		const response = await firstValueFrom(this._productService.deleteProduct(product.id));
+		if (response && response.data) {
+			this.products = this.products.filter((p) => p.id !== product.id);
+			this.productsFiltered = this.products;
+		}
 	}
 }

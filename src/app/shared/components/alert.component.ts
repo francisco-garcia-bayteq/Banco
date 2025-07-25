@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { eAlertType } from "../../utils/enums/alert.enum";
-import { AlertService, AlertData } from "../../services/alert.service";
+import { AlertService } from "../../services/alert.service";
 import { Subscription } from "rxjs";
+import { AlertData } from "../../utils/models/alert.interface";
 
 @Component({
     selector: 'app-alert',
@@ -12,10 +12,16 @@ import { Subscription } from "rxjs";
             <div class="alert alert-{{ alertData.type }}" role="alert">
                 {{ alertData.message }}
             </div>
+            <button *ngIf="alertData.showCancelButton"
+                type="button" 
+                class="btn btn-secondary" 
+                (click)="onCancel()">
+                Cancelar
+            </button>
             <button 
                 type="button" 
                 class="btn btn-primary" 
-                (click)="onClose()">
+                (click)="onConfirm()">
                 {{ alertData.showConfirmButton ? 'Aceptar' : 'Cerrar' }}
             </button>
         </div>
@@ -40,12 +46,19 @@ export class AlertComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    onClose() {
+    onConfirm() {
         if (this.alertData?.showConfirmButton && this.alertData?.onConfirm) {
-            // Ejecutar la función de confirmación
             this.alertData.onConfirm();
         }
-        // Cerrar la alerta
+
+        this.alertService.closeAlert();
+    }
+
+    onCancel() {
+        if (this.alertData?.showCancelButton && this.alertData?.onCancel) {
+            this.alertData.onCancel();
+        }
+
         this.alertService.closeAlert();
     }
 }
