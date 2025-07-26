@@ -4,6 +4,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductAdministrationPageComponent } from './pages/product-administration-page/product-administration-page.component';
 import { ProductCreationPageComponent } from './pages/product-creation-page/product-creation-page.component';
+import { ErrorInterceptor } from '../../core/interceptors/error.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,14 @@ import { ProductCreationPageComponent } from './pages/product-creation-page/prod
   imports: [
     CommonModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    }
   ]
 })
 export class ProductAdministrationModule { }

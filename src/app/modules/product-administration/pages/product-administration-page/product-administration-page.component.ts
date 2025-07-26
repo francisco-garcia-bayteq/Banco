@@ -28,7 +28,7 @@ export class ProductAdministrationPageComponent implements OnInit {
 		]}
 	];
 
-	products: Product[] = [];
+	products: Product[] | null = null;
 	search: string = '';
 	productForm!: FormGroup;
 	productsFiltered: Product[] = [];
@@ -50,7 +50,8 @@ export class ProductAdministrationPageComponent implements OnInit {
 
 	async initialData() {
 		this.error = '';
-
+		// Simular carga de datos
+		await new Promise(resolve => setTimeout(resolve, 1000));
 		const response = await firstValueFrom(this._productService.getProducts());
 
 		if (response && response.data) {
@@ -74,10 +75,10 @@ export class ProductAdministrationPageComponent implements OnInit {
 	}
 
 	filterProducts() {
-		if (!this.search || this.search.trim() === '') {
-			this.productsFiltered = [...this.products];
+		if (!this.search || this.search.trim() === '' || !this.products) {
+			this.productsFiltered = [...this.products || []];
 		} else {
-			this.productsFiltered = this.products.filter((product) =>
+			this.productsFiltered = this.products?.filter((product) =>
 				product.name.toLowerCase().includes(this.search.toLowerCase())
 			);
 		}
@@ -103,8 +104,8 @@ export class ProductAdministrationPageComponent implements OnInit {
 	async deleteProductService(product: any) {
 		const response = await firstValueFrom(this._productService.deleteProduct(product.id));
 		if (response && response.data) {
-			this.products = this.products.filter((p) => p.id !== product.id);
-			this.productsFiltered = this.products;
+			this.products = this.products?.filter((p) => p.id !== product.id) || [];
+			this.productsFiltered = this.products || [];
 		}
 	}
 }

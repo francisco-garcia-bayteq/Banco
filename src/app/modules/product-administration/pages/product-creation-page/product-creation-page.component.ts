@@ -38,12 +38,21 @@ export class ProductCreationPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const state = history.state;
+    const state = history?.state || null;
     if (state.id) {
       this.productForm.patchValue(state);
       this.editMode = true;
       this.productForm.get('id')?.disable();
+    } else {
+      this.setRevisionDate();
     }
+  }
+
+  setRevisionDate(){
+    const fechaAnual = new Date();
+    fechaAnual.setFullYear(fechaAnual.getFullYear() + 1);
+    this.productForm.get('date_revision')?.setValue(fechaAnual.toISOString().split('T')[0]);
+    this.productForm.get('date_revision')?.disable();
   }
 
   resetForm() {
@@ -52,14 +61,30 @@ export class ProductCreationPageComponent implements OnInit {
     this.productForm.markAsPristine();
   }
 
+
+  getFormValues(): any {
+    const formValues = this.productForm.value;
+    const disabledValues: any = {};
+    
+    Object.keys(this.productForm.controls).forEach(key => {
+      const control = this.productForm.get(key);
+      if (control?.disabled) {
+        disabledValues[key] = control.value;
+      }
+    });
+    
+    return { ...formValues };
+  }
+
   async sendForm() {
     let response: ApiResponse<Product>;
     try {
-      this.productForm.get('id')?.enable();
+      const formData = this.getFormValues();
+      
       if (this.editMode) {
-        response = await firstValueFrom(this._productService.updateProduct(this.productForm.value));
+        response = await firstValueFrom(this._productService.updateProduct(formData));
       } else {
-        response = await firstValueFrom(this._productService.createProduct(this.productForm.value));
+        response = await firstValueFrom(this._productService.createProduct(formData));
       }
 
       if (response && response.data) {
@@ -75,12 +100,8 @@ export class ProductCreationPageComponent implements OnInit {
         this._alertService.showAlert('Error al crear el producto' + response.message, eAlertType.DANGER);
       }
     } catch (error) {
-      console.error('Error creating product:', error);
+      console.error('Error creating product:', (error as any).error.message ?? 'Error desconocido');
       this._alertService.showAlert('Error al crear el producto' + error, eAlertType.DANGER);
-    } finally {
-      if (this.editMode) {
-        this.productForm.get('id')?.disable();
-      }
     }
   }
 }

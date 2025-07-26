@@ -4,13 +4,14 @@ import { TableComponent } from './components/table.component';
 import { InputComponent } from './components/input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertComponent } from './components/alert.component';
+import { SkeletonComponent } from './components/skeleton.component';
 
 @NgModule({
-  declarations: [TableComponent, InputComponent, AlertComponent],
+  declarations: [TableComponent, InputComponent, AlertComponent, SkeletonComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule
   ],
-  exports: [TableComponent, InputComponent, AlertComponent]
+  exports: [TableComponent, InputComponent, AlertComponent, SkeletonComponent]
 })
 export class SharedModule { }

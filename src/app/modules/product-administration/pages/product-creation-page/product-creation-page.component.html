@@ -32,7 +32,7 @@
                 [placeholder]="'Ingrese la fecha de reestructuración'" />
     </form>
     <div class="form-buttons">
-        <button type="button" class="btn btn-secondary"
+        <button type="button" class="btn btn-secondary" [disabled]="editMode"
             (click)="resetForm()">Reiniciar</button>
         <button type="button" class="btn btn-primary"
             [disabled]="productForm.invalid"
