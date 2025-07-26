@@ -48,7 +48,7 @@ export class ProductCreationPageComponent implements OnInit {
     }
   }
 
-  setRevisionDate(){
+  setRevisionDate() {
     const fechaAnual = new Date();
     fechaAnual.setFullYear(fechaAnual.getFullYear() + 1);
     this.productForm.get('date_revision')?.setValue(fechaAnual.toISOString().split('T')[0]);
@@ -65,22 +65,24 @@ export class ProductCreationPageComponent implements OnInit {
   getFormValues(): any {
     const formValues = this.productForm.value;
     const disabledValues: any = {};
-    
+
     Object.keys(this.productForm.controls).forEach(key => {
       const control = this.productForm.get(key);
       if (control?.disabled) {
         disabledValues[key] = control.value;
       }
     });
-    
-    return { ...formValues };
+
+    return { ...formValues, ...disabledValues };
   }
 
   async sendForm() {
+    const id = this.productForm.get('id')?.value;
     let response: ApiResponse<Product>;
     try {
+      await this.verifyId(id);
       const formData = this.getFormValues();
-      
+
       if (this.editMode) {
         response = await firstValueFrom(this._productService.updateProduct(formData));
       } else {
@@ -100,8 +102,18 @@ export class ProductCreationPageComponent implements OnInit {
         this._alertService.showAlert('Error al crear el producto' + response.message, eAlertType.DANGER);
       }
     } catch (error) {
-      console.error('Error creating product:', (error as any).error.message ?? 'Error desconocido');
-      this._alertService.showAlert('Error al crear el producto' + error, eAlertType.DANGER);
+      this._alertService.showAlert('Error al crear el producto ' + ((error as any).error.message ?? 'Error desconocido'), eAlertType.DANGER);
     }
+  }
+
+  async verifyId(id: string): Promise<boolean> {
+    const response = await firstValueFrom(this._productService.verifyId(id));
+    if (response) {
+      const error = {
+        error: { message: 'El ID ya existe' }
+      }
+      throw error;
+    }
+    return false;
   }
 }

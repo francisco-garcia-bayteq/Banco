@@ -282,9 +282,9 @@ body {
 .dropdown-content {
     display: none;
     position: absolute;
-    right: 0;
-    top: 0%;
-    background-color: white;
+    right: 45px;
+    top: -40px;
+    background-color: rgba(255, 255, 255, 0.55);
     z-index: 9999;
     border-radius: 4px;
     border: 1px solid #ddd;
@@ -317,7 +317,6 @@ body {
     width: 80px;
 }
 
-// MEJORAS PARA EL DROPDOWN EN TABLA
 .data-table .dropdown {
     display: flex;
     justify-content: center;

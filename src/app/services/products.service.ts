@@ -29,5 +29,9 @@ export class ProductsService extends AplicationService {
 	deleteProduct(id: string): Observable<ApiResponse<Product>> {
 		return this._http.delete<ApiResponse<Product>>(`${this.getApiBaseUrl()}/bp/products/${id}`, { headers: this.getHeaders() });
 	}
+
+	verifyId(id: string): Observable<boolean> {
+		return this._http.get<boolean>(`${this.getApiBaseUrl()}/bp/products/verification/${id}`, { headers: this.getHeaders() });
+	}
     
 }
