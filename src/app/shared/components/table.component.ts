@@ -18,8 +18,9 @@ import { Router } from "@angular/router";
                                 <div *ngIf="column.tooltip"
                                      [title]="getColumnTooltip(column.name)"
                                      (mouseenter)="showTooltip($event, column.name)"
-                                     (mouseleave)="hideTooltip()">
-                                    <img style="margin-top: 5px;" src="icons/info.png" alt="Info" width="25" height="25">
+                                     (mouseleave)="hideTooltip()"
+                                     class="tooltip-icon">
+                                    <img src="icons/information.png" alt="Info" width="16" height="16">
                                 </div>
                             </div>
                         </th>
@@ -30,7 +31,7 @@ import { Router } from "@angular/router";
                         <td *ngFor="let column of columnDefinition" class="table-cell">
                             @switch (column.type) {
                                 @case (eCellType.IMAGE) {
-                                    <img class="img-cell" [src]="row[column.key]" height="50" width="50" alt="Logo" />
+                                    <img class="img-cell" (error)="placeholderImage(column.key)" [src]="row[column.key]" height="50" width="50" alt="Logo" />
                                 }
                                 @case (eCellType.STRING) {
                                     {{ row[column.key] }}
@@ -61,15 +62,22 @@ import { Router } from "@angular/router";
                 </tbody>
                 <tbody *ngIf="data.length === 0">
                     <tr>
-                        <td colspan="100%" class="no-data">No hay registros</td>
+                        <td [attr.colspan]="columnDefinition.length" class="no-data">
+                            <div class="no-data-content">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12h6m-3-3v6m-9 1V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                </svg>
+                                <p>No hay registros disponibles</p>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <div class="table-footer">
-                <div class="records-count">{{ data.length }} registros</div>
-                <select *ngIf="tableSizePageOptions.length > 0" (change)="onChangeTableSize($event)" class="page-size-select">
+                <div class="records-count">{{ displayedCount }} registros</div>
+                <select *ngIf="tableSizePageOptions.length > 0" [ngModel]="tableSize" (ngModelChange)="onChangeTableSize($event)" class="page-size-select">
                     @for (option of tableSizePageOptions; track option) {
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option [value]="option">{{ option }}</option>
                     }
                 </select>
             </div>
@@ -80,24 +88,30 @@ export class TableComponent {
     @Input() columnDefinition!: IColumnDefinition[];
     @Input() data: any[] = [];
     @Output() deleteRowEvent = new EventEmitter<any>();
+    style: string = 'red';
 
     eCellType = eCellType;
 
     tableSizePageOptions: number[] = TABLE_SIZE_PAGE_OPTIONS;
     tableSize: number = this.tableSizePageOptions[0];
 
-    // Tooltip properties
     showTooltipFlag = false;
     tooltipX = 0;
     tooltipY = 0;
     tooltipText = '';
 
+    get displayedCount(): number {
+        return Math.min(this.data.length, this.tableSize);
+    }
+
     constructor(private router: Router) {}
 
-    onChangeTableSize(event: Event) {
-        const target = event.target as HTMLSelectElement;
-        const value = parseInt(target.value);
-        this.tableSize = value;
+    onChangeTableSize(value: number | string) {
+        this.tableSize = typeof value === 'string' ? parseInt(value, 10) : value;
+    }
+
+    placeholderImage(key: string) {
+        this.data.find(row => row[key])[key] = 'icons/image.png';
     }
 
     getColumnTooltip(columnName: string): string {
@@ -115,8 +129,8 @@ export class TableComponent {
         this.showTooltipFlag = false;
     }
 
-    navigateTo(route: string, rowData: any) {
-        this.router.navigate([this.router.url + route], { state: rowData });
+    navigateTo(_route: string, rowData: any) {
+        this.router.navigate(['/product-administration/create'], { state: rowData });
     }
 
     deleteRow(rowData: any) {

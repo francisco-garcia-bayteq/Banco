@@ -22,7 +22,7 @@ import { AlertData } from "../../utils/models/alert.interface";
                 type="button" 
                 class="btn btn-primary" 
                 (click)="onConfirm()">
-                {{ alertData.showConfirmButton ? 'Aceptar' : 'Cerrar' }}
+                {{ alertData.confirmButtonLabel || (alertData.showConfirmButton ? 'Aceptar' : 'Cerrar') }}
             </button>
         </div>
     </div>

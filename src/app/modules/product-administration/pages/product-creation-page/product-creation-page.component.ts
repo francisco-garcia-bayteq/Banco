@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { eInputType } from '../../../../utils/enums/input.enum';
-import { isDateGreaterThanCurrent, isDateNYearsAfterCurrent } from '../../../../utils/validators/input.validator';
+import { isDateGreaterThanCurrent, isDateRevisionOneYearAfterRelease } from '../../../../utils/validators/input.validator';
 import { ProductsService } from '../../../../services/products.service';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ export class ProductCreationPageComponent implements OnInit {
     logo: new FormControl('', { validators: [Validators.required] }),
     description: new FormControl('', { validators: [Validators.required, Validators.minLength(10), Validators.maxLength(200)] }),
     date_release: new FormControl('', { validators: [Validators.required, isDateGreaterThanCurrent()] }),
-    date_revision: new FormControl('', { validators: [Validators.required, isDateNYearsAfterCurrent(1)] })
+    date_revision: new FormControl('', { validators: [Validators.required, isDateRevisionOneYearAfterRelease] })
   });
 
   error: string = '';
@@ -39,19 +39,26 @@ export class ProductCreationPageComponent implements OnInit {
 
   ngOnInit(): void {
     const state = history?.state || null;
-    if (state.id) {
+    if (state?.id) {
       this.productForm.patchValue(state);
       this.editMode = true;
       this.productForm.get('id')?.disable();
     } else {
       this.setRevisionDate();
+      this.productForm.get('date_release')?.valueChanges.subscribe((value) => {
+        if (value) {
+          const d = new Date(value);
+          d.setFullYear(d.getFullYear() + 1);
+          this.productForm.get('date_revision')?.setValue(d.toISOString().split('T')[0]);
+        }
+      });
     }
   }
 
   setRevisionDate() {
-    const fechaAnual = new Date();
-    fechaAnual.setFullYear(fechaAnual.getFullYear() + 1);
-    this.productForm.get('date_revision')?.setValue(fechaAnual.toISOString().split('T')[0]);
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    this.productForm.get('date_revision')?.setValue(nextYear.toISOString().split('T')[0]);
     this.productForm.get('date_revision')?.disable();
   }
 
@@ -80,7 +87,9 @@ export class ProductCreationPageComponent implements OnInit {
     const id = this.productForm.get('id')?.value;
     let response: ApiResponse<Product>;
     try {
-      await this.verifyId(id);
+      if (!this.editMode) {
+        await this.verifyId(id);
+      }
       const formData = this.getFormValues();
 
       if (this.editMode) {
@@ -92,11 +101,9 @@ export class ProductCreationPageComponent implements OnInit {
       if (response && response.data) {
         this.error = '';
         this._alertService.showConfirmAlert(
-          'Producto creado correctamente',
+          this.editMode ? 'Producto actualizado correctamente' : 'Producto creado correctamente',
           eAlertType.SUCCESS,
-          () => {
-            this._router.navigate(['/product-administration']);
-          }
+          () => this._router.navigate(['/product-administration'])
         );
       } else {
         this._alertService.showAlert('Error al crear el producto' + response.message, eAlertType.DANGER);

@@ -5,6 +5,7 @@ export interface AlertData {
     type: eAlertType;
     showConfirmButton?: boolean;
     showCancelButton?: boolean;
+    confirmButtonLabel?: string;
     onCancel?: () => void;
     onConfirm?: () => void;
-  }
+}

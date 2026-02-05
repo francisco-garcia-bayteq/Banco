@@ -82,6 +82,9 @@ export class InputComponent implements ControlValueAccessor {
                 case 'isDateNYearsAfterCurrent':
                     msj = 'La fecha debe ser al menos 1 año después de la fecha actual!';
                     break;
+                case 'dateRevisionOneYearAfterRelease':
+                    msj = 'La fecha de revisión debe ser exactamente un año posterior a la fecha de liberación.';
+                    break;
             }
         }
         if (this.customErrorMessage) {

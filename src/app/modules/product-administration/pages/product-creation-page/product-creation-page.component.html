@@ -1,43 +1,42 @@
 <div class="form-container">
-    <h2 class="form-title">Formulario de Registro</h2>
-    <hr>
-    <form [formGroup]="productForm" class="product-form">
-            <app-input [label]="'ID'" [name]="'id'" class="w-50"
-                [type]="typeInput.TEXT"
-                [formControl]="$any(productForm.get('id'))"
-                placeholder="Ingrese el ID"
-                [customErrorMessage]="'ID no válido!'" />
-            <app-input [label]="'Nombre'" [name]="'name'" class="w-50"
-                [type]="typeInput.TEXT"
-                [formControl]="$any(productForm.get('name'))"
-                [placeholder]="'Ingrese el nombre'" />
-            <app-input [label]="'Descripción'" [name]="'description'"
-                class="w-50"
-                [type]="typeInput.TEXT"
-                [formControl]="$any(productForm.get('description'))"
-                [placeholder]="'Ingrese la descripción'" />
-            <app-input [label]="'Logo'" [name]="'logo'" class="w-50"
-                [type]="typeInput.TEXT"
-                [formControl]="$any(productForm.get('logo'))"
-                [placeholder]="'Ingrese el logo'" />
-            <app-input [label]="'Fecha Liberación'" [name]="'date_release'"
-                class="w-50"
-                [type]="typeInput.DATE"
-                [formControl]="$any(productForm.get('date_release'))"
-                [placeholder]="'Ingrese la fecha de liberación'" />
-            <app-input [label]="'Fecha Revisión'" [name]="'date_revision'"
-                class="w-50"
-                [type]="typeInput.DATE"
-                [formControl]="$any(productForm.get('date_revision'))"
-                [placeholder]="'Ingrese la fecha de reestructuración'" />
-    </form>
-    <div class="form-buttons">
-        <button type="button" class="btn btn-secondary" [disabled]="editMode"
-            (click)="resetForm()">Reiniciar</button>
-        <button type="button" class="btn btn-primary"
-            [disabled]="productForm.invalid"
-            (click)="sendForm()">Enviar</button>
-    </div>
+	<h2 class="form-title">{{ editMode ? 'Editar Producto' : 'Formulario de Registro' }}</h2>
+	<form [formGroup]="productForm" class="product-form">
+		<app-input [label]="'ID'" [name]="'id'" class="w-50"
+			[type]="typeInput.TEXT"
+			[formControl]="$any(productForm.get('id'))"
+			placeholder="Ingrese el ID"
+			[customErrorMessage]="'ID no válido!'" />
+		<app-input [label]="'Nombre'" [name]="'name'" class="w-50"
+			[type]="typeInput.TEXT"
+			[formControl]="$any(productForm.get('name'))"
+			[placeholder]="'Ingrese el nombre'" />
+		<app-input [label]="'Descripción'" [name]="'description'"
+			class="w-50"
+			[type]="typeInput.TEXT"
+			[formControl]="$any(productForm.get('description'))"
+			[placeholder]="'Ingrese la descripción'" />
+		<app-input [label]="'Logo'" [name]="'logo'" class="w-50"
+			[type]="typeInput.TEXT"
+			[formControl]="$any(productForm.get('logo'))"
+			[placeholder]="'Ingrese la URL del logo'" />
+		<app-input [label]="'Fecha Liberación'" [name]="'date_release'"
+			class="w-50"
+			[type]="typeInput.DATE"
+			[formControl]="$any(productForm.get('date_release'))"
+			[placeholder]="'Ingrese la fecha de liberación'" />
+		<app-input [label]="'Fecha Revisión'" [name]="'date_revision'"
+			class="w-50"
+			[type]="typeInput.DATE"
+			[formControl]="$any(productForm.get('date_revision'))"
+			[placeholder]="'Ingrese la fecha de revisión'" />
+	</form>
+	<div class="form-buttons">
+		<button type="button" class="btn btn-secondary" [disabled]="editMode"
+			(click)="resetForm()">Reiniciar</button>
+		<button type="button" class="btn btn-primary"
+			[disabled]="productForm.invalid"
+			(click)="sendForm()">{{ editMode ? 'Guardar Cambios' : 'Agregar Producto' }}</button>
+	</div>
 </div>
 
 

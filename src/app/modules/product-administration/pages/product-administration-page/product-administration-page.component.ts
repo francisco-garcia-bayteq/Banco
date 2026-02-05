@@ -21,7 +21,7 @@ export class ProductAdministrationPageComponent implements OnInit {
 		{ name: 'Nombre del producto', key: 'name', type: eCellType.STRING},
 		{ name: 'Descripción', key: 'description', type: eCellType.STRING, tooltip: 'Descripción del producto' },
 		{ name: 'Fecha de liberación', key: 'date_release', type: eCellType.DATE, tooltip: 'Fecha de liberación del producto' },
-		{ name: 'Fecha de reestructuración', key: 'date_revision', type: eCellType.DATE, tooltip: 'Fecha de reestructuración del producto' },
+		{ name: 'Fecha de revisión', key: 'date_revision', type: eCellType.DATE, tooltip: 'Fecha de revisión del producto' },
 		{ name: '', key: 'actions', type: eCellType.ACTIONS_NAVIGATE, options: [
 			{ label: 'Editar', value: 'edit', navigate: '/create', data: { id: 'id' } },
 			{ label: 'Eliminar', value: 'delete', navigate: '/create', data: { id: 'id' } }
@@ -50,15 +50,12 @@ export class ProductAdministrationPageComponent implements OnInit {
 
 	async initialData() {
 		this.error = '';
-		// Simular carga de datos
-		await new Promise(resolve => setTimeout(resolve, 1000));
 		const response = await firstValueFrom(this._productService.getProducts());
 
 		if (response && response.data) {
 			this.products = response.data;
-			this.productsFiltered = [...this.products]; // Inicializar con todos los productos
+			this.productsFiltered = [...this.products];
 		} else {
-			console.error('Respuesta inválida del servicio:', response);
 			this.error = 'No se pudieron cargar los productos';
 		}
 	}
@@ -78,8 +75,11 @@ export class ProductAdministrationPageComponent implements OnInit {
 		if (!this.search || this.search.trim() === '' || !this.products) {
 			this.productsFiltered = [...this.products || []];
 		} else {
-			this.productsFiltered = this.products?.filter((product) =>
-				product.name.toLowerCase().includes(this.search.toLowerCase())
+			const term = this.search.toLowerCase().trim();
+			this.productsFiltered = this.products.filter((product) =>
+				product.name.toLowerCase().includes(term) ||
+				product.id.toLowerCase().includes(term) ||
+				product.description.toLowerCase().includes(term)
 			);
 		}
 	}
@@ -88,24 +88,24 @@ export class ProductAdministrationPageComponent implements OnInit {
 		this._router.navigate(['/product-administration/create']);
 	}
 
-	deleteProduct(product: any) {
+	deleteProduct(product: Product) {
 		this._alertService.showConfirmAlertWithCancel(
 			'¿Estás seguro de querer eliminar este producto?',
 			eAlertType.DANGER,
-			() => {
-				this.deleteProductService(product);
-			},
-			() => {
-				console.log('Cancelado');
-			}
+			() => this.deleteProductService(product),
+			undefined,
+			'Eliminar'
 		);
 	}
 
-	async deleteProductService(product: any) {
-		const response = await firstValueFrom(this._productService.deleteProduct(product.id));
-		if (response && response.data) {
+	async deleteProductService(product: Product) {
+		try {
+			await firstValueFrom(this._productService.deleteProduct(product.id));
 			this.products = this.products?.filter((p) => p.id !== product.id) || [];
-			this.productsFiltered = this.products || [];
+			this.productsFiltered = [...(this.products || [])];
+			this.filterProducts();
+		} catch {
+			this._alertService.showAlert('No se pudo eliminar el producto', eAlertType.DANGER);
 		}
 	}
 }

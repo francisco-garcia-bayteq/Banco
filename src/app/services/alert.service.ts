@@ -23,12 +23,13 @@ export class AlertService {
         });
     }
 
-    showConfirmAlertWithCancel(message: string, type: eAlertType = eAlertType.SUCCESS, onConfirm?: () => void, onCancel?: () => void) {
-        this._alertSubject.next({ 
-            message, 
-            type, 
+    showConfirmAlertWithCancel(message: string, type: eAlertType = eAlertType.SUCCESS, onConfirm?: () => void, onCancel?: () => void, confirmButtonLabel?: string) {
+        this._alertSubject.next({
+            message,
+            type,
             showConfirmButton: true,
             showCancelButton: true,
+            confirmButtonLabel,
             onConfirm,
             onCancel
         });
@@ -36,9 +37,5 @@ export class AlertService {
 
     closeAlert() {
         this._alertSubject.next(null);
-    }
-
-    confirm() {
-        const currentAlert = this._alertSubject.asObservable();
     }
 } 
